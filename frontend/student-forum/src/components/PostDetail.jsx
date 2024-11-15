@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Send, ThumbsUp } from 'lucide-react';
+import { ArrowLeft, Send, ThumbsDown, ThumbsUp } from 'lucide-react';
 
-export default function PostDetail({ post, onBack, onComment, onLike }) {
+export default function PostDetail({ post, onBack, onComment, onUpvote }) {
   const [comment, setComment] = useState('');
 
   const handleSubmit = (e) => {
@@ -32,13 +32,22 @@ export default function PostDetail({ post, onBack, onComment, onLike }) {
           <span>{new Date(post.timestamp).toLocaleDateString()}</span>
         </div>
         
-        <button 
-          className="flex items-center gap-1 hover:text-blue-600 transition-colors"
-          onClick={() => onLike(post.id)}
-        >
+        <div className='flex'>
+          <button 
+            className="flex items-center gap-1 hover:text-blue-600 transition-colors"
+            onClick={() => onUpvote(post.id)}
+          >
           <ThumbsUp size={16} />
-          {post.likes}
-        </button>
+          {post.upvotes}
+          </button>
+          <button 
+            className="flex ml-2 items-center gap-1 hover:text-blue-600 transition-colors"
+            onClick={() => onDownvote(post.id)}
+          >
+          <ThumbsDown size={16} />
+          {post.downvotes}
+          </button>
+        </div>
       </div>
 
       <div className="border-t pt-6">

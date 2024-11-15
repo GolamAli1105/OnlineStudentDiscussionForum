@@ -1,7 +1,7 @@
 import React from 'react';
-import { MessageSquare, ThumbsUp, Clock } from 'lucide-react';
+import { MessageSquare, ThumbsUp, Clock, ThumbsDown } from 'lucide-react';
 
-export default function PostCard({ post, onLike, onClick }) {
+export default function PostCard({ post, onUpvote, onDownvote, onClick }) {
   return (
     <div 
       className="bg-white rounded-lg shadow-md p-6 mb-4 hover:shadow-lg transition-shadow cursor-pointer"
@@ -22,16 +22,28 @@ export default function PostCard({ post, onLike, onClick }) {
           </span>
         </div>
         
-        <button 
-          className="flex items-center gap-1 hover:text-blue-600 transition-colors"
-          onClick={(e) => {
-            e.stopPropagation();
-            onLike(post.id);
-          }}
-        >
-          <ThumbsUp size={16} />
-          {post.likes}
-        </button>
+        <div className='flex'>
+          <button 
+            className="flex items-center gap-1 hover:text-blue-600 transition-colors"
+            onClick={(e) => {
+              e.stopPropagation();
+              onUpvote(post.id);
+            }}
+          >
+            <ThumbsUp size={16} />
+            {post.upvotes}
+          </button>
+          <button 
+            className="flex ml-2 items-center gap-1 hover:text-blue-600 transition-colors"
+            onClick={(e) => {
+              e.stopPropagation();
+              onDownvote(post.id);
+            }}
+          >  
+            <ThumbsDown size={16} />
+            {post.downvotes}
+          </button>
+        </div>
       </div>
       
       <div className="mt-2 text-sm text-gray-500">
