@@ -4,6 +4,7 @@ import PostCard from '../components/PostCard';
 import CreatePost from '../components/CreatePost';
 import PostDetail from '../components/PostDetail';
 import api from '../api';
+import { useNavigate } from 'react-router-dom';
 
 function Home({}){
     const [username, setUsername] = useState(() => {
@@ -30,22 +31,24 @@ function Home({}){
           upvotes: 0,
           downvotes: 0,
           comments: [],
+          upvotedByUser: false,
+          downvotedByUser: false,
         };
         setPosts([newPost, ...posts]);
     };
     
     const handleUpvote = (postId) => {
-        setPosts(posts.map(post =>
-          post.id === postId ? { ...post, upvotes: post.upvotes + 1 } : post
-        ));
+      setPosts(posts.map(post =>
+        post.id === postId ? { ...post, upvotes: post.upvotes + 1 } : post
+      ));
+    };
+  
+    const handleDownvote = (postId) => {
+      setPosts(posts.map(post =>
+        post.id === postId ? { ...post, downvotes: post.downvotes + 1 } : post
+      ));
     };
     
-    const handleDownvote = (postId) => {
-        setPosts(posts.map(post =>
-          post.id === postId ? { ...post, downvotes: post.downvotes + 1 } : post
-        ));
-    };
-
     const handleComment = (postId, content) => {
         const username = localStorage.getItem("username") || "Anonymous User";
         setPosts(posts.map(post =>
@@ -67,16 +70,35 @@ function Home({}){
             : post
         ));
     };
+
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+      localStorage.removeItem('username'); 
+      localStorage.removeItem('ACCESS_TOKEN'); 
+      localStorage.removeItem('REFRESH_TOKEN'); 
+      navigate('/logout'); 
+    };
     
+    const navigateToRegister = () => {
+      navigate("/register");
+    };
+
     const selectedPostData = posts.find(post => post.id === selectedPost);
 
     return <div className="min-h-screen bg-gray-100">
       <header className="bg-white shadow-sm">
-        <div className="max-w-4xl mx-auto px-4 py-6">
+        <div className="max-w-4xl mx-auto px-4 py-6 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <GraduationCap className="w-8 h-8 text-blue-600" />
             <h1 className="text-2xl font-bold text-gray-900">Online Student Discussion Forum</h1>
           </div>
+          <button 
+            onClick={handleLogout} 
+            className="bg-red-500 text-black px-4 py-2 rounded hover:bg-red-600 "
+          >
+            Logout
+          </button>
         </div>
       </header>
 

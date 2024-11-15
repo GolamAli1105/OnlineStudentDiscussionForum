@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ArrowLeft, Send, ThumbsDown, ThumbsUp } from 'lucide-react';
 
-export default function PostDetail({ post, onBack, onComment, onUpvote }) {
+export default function PostDetail({ post, onBack, onComment, onUpvote, onDownvote }) {
   const [comment, setComment] = useState('');
 
   const handleSubmit = (e) => {

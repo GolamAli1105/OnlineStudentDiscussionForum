@@ -34,3 +34,20 @@
 .form-button:hover{
     background-color: turquoise;
 }
+
+.form-link {
+    margin-top: 10px;
+}
+
+.form-link-button {
+    background: none;
+    border: none;
+    color: blue;
+    cursor: pointer;
+    text-decoration: underline;
+    padding: 5px 0;
+}
+
+.form-link-button:hover {
+    color: darkblue;
+}
