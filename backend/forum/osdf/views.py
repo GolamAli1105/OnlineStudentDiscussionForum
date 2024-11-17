@@ -14,6 +14,13 @@ class PostListCreate(generics.ListCreateAPIView):
     permission_classes= [IsAuthenticated]
     queryset= Post.objects.all()
 
+    def get_queryset(self):
+        queryset = Post.objects.all()
+        title_query = self.request.query_params.get('title', None)
+        if title_query:
+            queryset = queryset.filter(title__icontains=title_query)
+        return queryset
+
     def perform_create(self, serializer):
         if serializer.is_valid():
             serializer.save(author=self.request.user)
@@ -76,3 +83,22 @@ class PostVoteAPIView(APIView):
             "upvotes": post.upvotes,
             "downvotes": post.downvotes
         }, status=status.HTTP_200_OK)
+    
+class ReportPostAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, pk):
+        try:
+            post = Post.objects.get(pk=pk)
+        except Post.DoesNotExist:
+            return Response({"error": "Post not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+        user = request.user
+
+        if user in post.reported_by.all():
+            return Response({"error": "You have already reported this post."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        post.reported_by.add(user)
+        post.save()
+
+        return Response({"message": "Post reported successfully."}, status=status.HTTP_200_OK)

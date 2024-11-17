@@ -14,12 +14,30 @@ function Home({}){
         const saved = localStorage.getItem('forum-posts');
         return saved ? JSON.parse(saved) : [];
     });
+    const [searchTitle, setSearchTitle] = useState('');
     const [selectedPost, setSelectedPost] = useState(null);
     
     useEffect(() => {
         localStorage.setItem('forum-posts', JSON.stringify(posts));
     }, [posts]);
     
+    const fetchPosts = async (query = '') => {
+      try {
+          const response = await api.get(`/posts/?title=${query}`);
+          setPosts(response.data);
+      } catch (error) {
+          console.error('Error fetching posts:', error);
+      }
+  };
+
+  useEffect(() => {
+      fetchPosts();
+  }, []);
+
+  const handleSearch = () => {
+      fetchPosts(searchTitle);
+  };
+
     const handleCreatePost = (title, content) => {
         const username = localStorage.getItem("username") || "Anonymous User";
         const newPost = {
@@ -71,6 +89,19 @@ function Home({}){
         ));
     };
 
+    const handleReport = async (postId) => {
+      try {
+        const response = await api.post(`/posts/${postId}/report/`);
+        if (response.ok) {
+          alert("Post reported successfully.");
+        } else {
+          alert("Failed to report. You may have already reported this post.");
+        } 
+      } catch (error) {
+        alert(error.response?.data?.error || "Failed to report the post.");
+      }
+    };
+
     const navigate = useNavigate();
 
     const handleLogout = () => {
@@ -93,6 +124,23 @@ function Home({}){
             <GraduationCap className="w-8 h-8 text-blue-600" />
             <h1 className="text-2xl font-bold text-gray-900">Online Student Discussion Forum</h1>
           </div>
+          <div className='mt-4'>
+            <div className="mb-4 flex gap-2">
+              <input
+                type="text"
+                placeholder="Search posts by title"
+                value={searchTitle}
+                onChange={(e) => setSearchTitle(e.target.value)}
+                className="flex-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <button
+                onClick={handleSearch}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                Search
+              </button>
+            </div>
+          </div>
           <button 
             onClick={handleLogout} 
             className="bg-red-500 text-black px-4 py-2 rounded hover:bg-red-600 "
@@ -110,6 +158,7 @@ function Home({}){
             onComment={handleComment}
             onUpvote={handleUpvote}
             onDownvote={handleDownvote}
+            onReport={handleReport}
           />
         ) : (
           <>
@@ -122,6 +171,7 @@ function Home({}){
                   onUpvote={handleUpvote}
                   onDownvote={handleDownvote}
                   onClick={setSelectedPost}
+                  onReport={handleReport}
                 />
               ))}
               {posts.length === 0 && (

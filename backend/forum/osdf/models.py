@@ -12,6 +12,7 @@ class Post(models.Model):
     downvotes = models.IntegerField(default=0)
     upvoted_by = models.ManyToManyField(User, related_name="upvoted_posts", blank=True)
     downvoted_by = models.ManyToManyField(User, related_name="downvoted_posts", blank=True)
+    reported_by = models.ManyToManyField(User, related_name="reported_posts", blank=True)
 
     def __str__(self):
         return self.title

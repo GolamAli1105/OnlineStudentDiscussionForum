@@ -1,5 +1,5 @@
 import React from 'react';
-import { MessageSquare, ThumbsUp, Clock, ThumbsDown } from 'lucide-react';
+import { MessageSquare, ThumbsUp, Clock, ThumbsDown, AlertTriangle } from 'lucide-react';
 
 export default function PostCard({ post, onUpvote, onDownvote, onClick }) {
   return (
@@ -7,7 +7,18 @@ export default function PostCard({ post, onUpvote, onDownvote, onClick }) {
       className="bg-white rounded-lg shadow-md p-6 mb-4 hover:shadow-lg transition-shadow cursor-pointer"
       onClick={() => onClick(post.id)}
     >
+      <div className='w-full bg-white flex items-center justify-center'>
       <h2 className="text-xl font-semibold mb-2">{post.title}</h2>
+      <button
+        className="ml-auto text-red-500 hover:text-red-900 transition-colors"
+        onClick={() => {
+          e.stopPropagation();
+          onReport(post.id);
+        }}
+      >
+        <AlertTriangle size={16} />
+      </button>
+      </div>
       <p className="text-gray-600 mb-4 line-clamp-3">{post.content}</p>
       
       <div className="flex items-center justify-between text-sm text-gray-500">

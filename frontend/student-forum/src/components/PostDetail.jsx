@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Send, ThumbsDown, ThumbsUp } from 'lucide-react';
+import { ArrowLeft, Send, ThumbsDown, ThumbsUp, AlertTriangle } from 'lucide-react';
 
-export default function PostDetail({ post, onBack, onComment, onUpvote, onDownvote }) {
+export default function PostDetail({ post, onBack, onComment, onUpvote, onDownvote, onReport}) {
   const [comment, setComment] = useState('');
 
   const handleSubmit = (e) => {
@@ -22,7 +22,15 @@ export default function PostDetail({ post, onBack, onComment, onUpvote, onDownvo
         Back to Posts
       </button>
 
+      <div className='w-full bg-white flex items-center justify-center'>
       <h1 className="text-2xl font-bold mb-2">{post.title}</h1>
+      <button
+        className="ml-auto text-red-500 hover:text-red-900 transition-colors"
+        onClick={() => onReport(post.id)}
+      >
+        <AlertTriangle size={16} />
+      </button>
+      </div>
       <p className="text-gray-600 mb-4">{post.content}</p>
       
       <div className="flex items-center justify-between text-sm text-gray-500 mb-6">
