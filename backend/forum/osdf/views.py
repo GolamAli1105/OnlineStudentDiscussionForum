@@ -102,3 +102,7 @@ class ReportPostAPIView(APIView):
         post.save()
 
         return Response({"message": "Post reported successfully."}, status=status.HTTP_200_OK)
+
+class yaya(APIView):
+    def get(self,request):
+        return Response("yes")
